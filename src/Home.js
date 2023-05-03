@@ -23,7 +23,7 @@ export default function Home() {
       .ref('tasks/')
       .once('value')
       .then(snapshot => {
-        {console.log("rrrrrrr",snapshot.val())}
+        // {console.log("rrrrrrr",snapshot.val())}
         setAllTasks(snapshot.val() ? Object.values(snapshot.val()) : null );
       })  
   };
