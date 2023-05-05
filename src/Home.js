@@ -11,12 +11,23 @@ import Header, {List} from './components/Header';
 import uuid from 'react-native-uuid';
 import database from '@react-native-firebase/database';
 import {FlatList} from 'react-native-gesture-handler';
+import moment from 'moment';
+import Modal from './Modals';
+import Modals from './Modals';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 export default function Home() {
   const [note, setNote] = useState('');
+  const isFocused = useIsFocused()
   const [AllTasks, setAllTasks] = useState('');
+  const [open,setOpen] = useState(false)
+  const [Id,setId] = useState('')
+  const navigation=useNavigation()
+
+
+  
 
   const getAllTasks = async () => {
     await database()
@@ -24,13 +35,15 @@ export default function Home() {
       .once('value')
       .then(snapshot => {
         // {console.log("rrrrrrr",snapshot.val())}
-        setAllTasks(snapshot.val() ? Object.values(snapshot.val()) : null );
-      })  
+        setAllTasks(snapshot.val() ? Object.values(snapshot.val()).sort((a,b) => a.time  < b.time ? 1 : -1) : null );
+        })
+      
   };
   console.log('vvv', AllTasks);
   useEffect(() => {
     getAllTasks();
-  }, []);
+  },[isFocused]);
+
   const msgvalid =  txt =>txt && txt.replace(/\s/g, "").length
   async function AddTasks() {
     if (note == '' || msgvalid(note)==0) {
@@ -39,6 +52,9 @@ export default function Home() {
     let data = {
       id: uuid.v4(),
       task: note,
+      time : moment().format("dddd, MMM DD at HH:mm:ss a"),
+      
+
     };
     await database()
       .ref('/tasks/' + data.id)
@@ -55,12 +71,14 @@ export default function Home() {
     
   }
 
+
   console.log('vvv222', AllTasks);
 
   console.log(note);
   return (
     <View style={{width: '100%', height: height}}>
       <Header />
+    
       <View
         style={{
           flexDirection: 'row',
@@ -118,19 +136,36 @@ export default function Home() {
                 // paddingHorizontal: 10,
                 paddingVertical: 10,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                // justifyContent: 'space-between',
 
               }}>
-                <View style={{width:'80%'}}>
-                <Text style={{fontSize: 20, color: 'black'}}>{ item.task}</Text>
+                <View style={{width:'65%',flexDirection:'row'}}>
+                <Text style={{fontSize: 20, color: 'black'}}> { item.task} </Text>
+               
                 </View>
-              
+                <TouchableOpacity
+                style={{
+                  width: '15%',
+                  height: 35,
+                  backgroundColor: 'green',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 10,
+                  right:4
+                }}
+                onPress={()=>{setOpen(false),navigation.navigate("Modal",{
+                  id:item.id
+                })}}>
+                <Text style={{color: 'white', fontWeight: '600', fontSize: 13}}>
+                  Edit
+                </Text>
+              </TouchableOpacity>
 
               <TouchableOpacity
                 style={{
                   width: '15%',
                   height: 35,
-                  backgroundColor: 'green',
+                  backgroundColor: 'red',
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 10,
