@@ -76,7 +76,7 @@ export default function Home() {
 
   console.log(note);
   return (
-    <View style={{width: '100%', height: height}}>
+    <View style={{width: '100%', height: height,backgroundColor:'white'}}>
       <Header />
     
       <View
@@ -95,7 +95,7 @@ export default function Home() {
             borderWidth: 2,
             borderColor: 'grey',
             padding: 10,
-            
+            backgroundColor:'white'
           }}
           placeholder={note ? note :'Write Here...'}
           multiline={true}
@@ -129,7 +129,7 @@ export default function Home() {
         // keyExtractor={item=>item.id}
         renderItem={({item}) => {
           return (
-            <View style={{height:'auto',width:'90%',marginTop:10,alignItems:'center',justifyContent:'center',borderRadius:15,left:20,borderWidth:2,borderColor:'grey'}}>
+            <View style={{height:'auto',width:'90%',marginTop:10,alignItems:'center',justifyContent:'center',borderRadius:15,left:20,borderWidth:2,borderColor:'grey',backgroundColor:'white'}}>
               
             <View
               style={{
@@ -154,7 +154,8 @@ export default function Home() {
                   right:4
                 }}
                 onPress={()=>{setOpen(false),navigation.navigate("Modal",{
-                  id:item.id
+                  id:item.id,
+                  task:item.task
                 })}}>
                 <Text style={{color: 'white', fontWeight: '600', fontSize: 13}}>
                   Edit

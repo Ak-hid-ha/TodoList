@@ -10,8 +10,8 @@ export default function App (){
   return(
   <NavigationContainer>
 <stack.Navigator>
-  <stack.Screen component={Home} name="Home" />
-  <stack.Screen component={Modals} name="Modal" />
+  <stack.Screen component={Home} name="Home" options={{headerShown:false}} />
+  <stack.Screen component={Modals} name="Modal" options={{headerShown:false}} />
 </stack.Navigator>
   </NavigationContainer>
     
